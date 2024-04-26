@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+
+{% block head %}
+
+{% endblock %}
+
+{% block section_title %}Pending to accept Assets{% endblock %}
+
+{% block content %}
+    <button onclick="location.reload();" class="btn btn-primary">
+        Refresh
+    </button>
+    <table id="d-table" class="table table-striped" style="width:100%">
+        <thead>
+        <tr>
+            <th>Code</th>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Owner</th>
+            <th>Accept?</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+
+    </table>
+
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+    $(document).ready(function() {
+        var ownerFilterActive = false;
+        var owner_id = '{{ owner_id }}';
+        var originalData;
+        var table = $('#d-table').DataTable({
+            "ajax": {
+                "url": "{{api_get_all}}", // Replace with your actual API endpoint
+                "dataSrc": function (json) {
+                    originalData = json.assets; // Store original data globally
+                    return originalData.filter(item => item.send_to === owner_id);
+                }
+            },
+            "columns": [
+                {"data": "code"},
+                {"data": "description"},
+                {"data": "amount"},
+                {"data": "owner"},
+                  {
+                        "data": null, // No hay datos específicos de una columna a vincular
+                        "defaultContent": "<button class='btn btn-success accept-btn'>Accept</button>",
+                        "orderable": false
+                    }
+            ],
+            "columnDefs": [{
+                "targets": 3,
+                "render": function (data, type, row, meta) {
+                    return decodeURIComponent(escape(window.atob(data))); // Decode base64 and then URI component
+                }
+            }]
+        });
+
+        $('#d-table tbody').on('click', '.accept-btn', function() {
+            var tr = $(this).closest('tr');
+            var data = table.row(tr).data();
+            var button = $(this);
+            button.prop('disabled', true); // Deshabilitar el botón para prevenir múltiples clics
+
+            $.ajax({
+                url: "{{ api_url }}/api/asset/" + data.code + "{{ accept_url }}", // Construir la URL correctamente
+                method: 'POST',
+                data: {code: data.code},
+                success: function(response) {
+                    table.row(tr).remove().draw(); // Eliminar la fila si la operación es exitosa
+                },
+                error: function(xhr, status, error) {
+                    button.prop('disabled', false); // Rehabilitar el botón en caso de error
+                    alert("Error: " + xhr.responseText); // Mostrar mensaje de error
+                }
+            });
+        });
+
+
+    });
+    </script>
+{% endblock %}

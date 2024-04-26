@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+
+
+{% block head %}
+
+{% endblock %}
+
+{% block section_title %}Assets{% endblock %}
+{% block style %}
+    <style>
+        td.amount-clickable {
+            color: blue !important;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <button onclick="location.reload();" class="btn btn-primary">
+        Refresh
+    </button>
+    <button id="toggleView" class="btn btn-primary">See own</button>
+    <table id="d-table" class="table table-striped" style="width:100%">
+        <thead>
+        <tr>
+            <th>Code</th>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Owner</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+
+    </table>
+
+    <!-- Modal consume-->
+<div class="modal fade" id="amountModal" tabindex="-1" aria-labelledby="amountModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="amountModalLabel">Consume Amount</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="amountForm">
+          <div class="mb-3">
+            <label for="codeField" class="col-form-label">Code:</label>
+            <input type="text" class="form-control" id="codeField" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="amountField" class="col-form-label">Amount to consume:</label>
+            <input type="number" class="form-control" id="amountField" value="1">
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Send</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal transfer owner -->
+<div class="modal fade" id="changeOwnerModal" tabindex="-1" aria-labelledby="changeOwnerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changeOwnerModalLabel">Change Owner</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="changeOwnerForm">
+                   <div class="mb-3">
+                        <label for="newOwnercodeField" class="col-form-label">Code:</label>
+                        <input type="text" class="form-control" id="newOwnercodeField" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newOwnerSelect" class="form-label">New Owner:</label>
+                        <select class="form-control" id="newOwnerSelect">
+
+                        </select>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Change Owner</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+    $(document).ready(function() {
+        var ownerFilterActive = false;
+        var owner_id = '{{ owner_id }}';
+        var originalData;
+        var table = $('#d-table').DataTable({
+            "ajax": {
+                "url": "{{api_get_all}}", // Replace with your actual API endpoint
+               "dataSrc": function (json) {
+                originalData = json.assets; // Store original data globally
+                return json.assets; // Return the actual data
+            }
+            },
+            "columns": [
+                { "data": "code" },
+                { "data": "description" },
+                 { "data": "amount", "className": "amount-clickable" },
+                { "data": "owner" }
+            ],
+            "columnDefs": [{
+                "targets": 3,
+                "render": function(data, type, row, meta) {
+                if (data === owner_id) {
+                    return '<a href="#" class="owner-link" data-code="' + row.code + '">' + decodeURIComponent(escape(window.atob(data))) + '</a>';
+                } else {
+                    return decodeURIComponent(escape(window.atob(data))); // Decode base64 and then URI component
+                }
+                }
+            }]
+        });
+
+
+
+        // Toggle see all or see own
+        $('#toggleView').on('click', function() {
+            if (!ownerFilterActive) {
+                // Apply filter to show only entries where 'owner' matches 'owner_id'
+                var filteredData = originalData.filter(item => item.owner === owner_id);
+                table.clear().rows.add(filteredData).draw();
+                ownerFilterActive = true;
+                $(this).text('See all');
+            } else {
+                // Reset to show all data
+                table.clear().rows.add(originalData).draw();
+                ownerFilterActive = false;
+                $(this).text('See own');
+            }
+        });
+
+        // Consume modal
+        $('#d-table tbody').on('click', 'td.amount-clickable', function () {
+            var data = table.row(this).data();
+            $('#codeField').val(data.code);
+            $('#amountModal').modal('show');
+        });
+        $('#amountForm').submit(function(e) {
+            e.preventDefault();
+            var code = $('#codeField').val();
+            var amount = $('#amountField').val();
+            $.ajax({
+                url: '{{api_url}}'+'/api/asset/' + code + "/consume/", // Replace with your endpoint
+                method: 'POST',
+                data: {
+                    code: code,
+                    amount: amount
+                },
+                success: function() {
+                    $('#amountModal').modal('hide');
+                    setTimeout(function() { location.reload(); }, 2000);
+                },
+                error: function(response) {
+                    $('#amountModal .modal-body').html('Error: ' + response.responseText);
+                }
+            });
+        });
+
+
+        // Transfer logic
+        $('#d-table tbody').on('click', '.owner-link', function() {
+            $('#newOwnerSelect').empty(); // Limpiar opciones anteriores
+
+            // Agregar opciones únicas de owner recogidas de la DataTable
+            let owners = new Set();
+            table.data().each(function(val) {
+                    owners.add(val.owner);
+            });
+            $('#newOwnercodeField').val($(this).data('code'));
+            owners.forEach(function(owner) {
+                $('#newOwnerSelect').append($('<option>', {
+                    value: owner,
+                    text: decodeURIComponent(escape(window.atob(owner)))
+                }));
+            });
+            $('#changeOwnerModal').modal('show');
+        });
+
+
+        $('#changeOwnerForm').submit(function(e) {
+            e.preventDefault();
+            let newOwner = $('#newOwnerSelect').val();
+            let assetCode = $('#newOwnercodeField').val();
+            $.ajax({
+                url: "{{ api_url }}/api/asset/" + assetCode + "{{ transfer_url }}",  // Asegúrate de poner la URL correcta
+                method: 'POST',
+                data: {
+                    code: assetCode,
+                    send_to: newOwner
+                },
+                success: function() {
+                    $('#changeOwnerModal').modal('hide');
+                    setTimeout(function() { location.reload(); }, 2000);
+                },
+                error: function(response) {
+                    alert('Error: ' + response.responseText);
+                }
+            });
+        });
+
+
+
+
+
+    });
+    </script>
+{% endblock %}

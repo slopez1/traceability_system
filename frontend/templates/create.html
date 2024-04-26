@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+
+{% block head %}
+
+{% endblock %}
+
+{% block section_title %}Assets{% endblock %}
+
+{% block content %}
+<form id="createAssetForm">
+    <div class="mb-3">
+        <label for="codeInput" class="form-label">Code</label>
+        <input type="text" class="form-control" id="codeInput" required>
+    </div>
+    <div class="mb-3">
+        <label for="descriptionInput" class="form-label">Description</label>
+        <input type="text" class="form-control" id="descriptionInput" required>
+    </div>
+    <div class="mb-3">
+        <label for="amountInput" class="form-label">Amount</label>
+        <input type="number" class="form-control" id="amountInput" required>
+    </div>
+    <div id="assetsConsumedContainer" class="mb-3">
+        <label for="assetsConsumedSelect" class="form-label">Assets Consumed</label>
+
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+<div id="formResult"></div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+    var owner_id = '{{ owner_id }}';
+    $(document).ready(function() {
+        var apiURL = "{{ api_get_all }}";
+        $.getJSON(apiURL, function(data) {var content = data.assets.filter(function(asset) {
+            return asset.owner === owner_id && asset.amount > 0;
+        }).map(function(asset) {
+                return `
+                    <div class="input-group mb-2">
+                        <div class="input-group-text">
+                            <input class="form-check-input mt-0" type="checkbox" value="${asset.code}" aria-label="Checkbox for following text input">
+                        </div>
+                        <input type="text" class="form-control" value="${asset.code}:${asset.description} " readonly>
+                        <input type="number" class="form-control" placeholder="Amount to consume (current: ${asset.amount})" aria-label="Amount" min="0">
+                    </div>`
+            });
+            $('#assetsConsumedContainer').append(content.join(''));
+        });
+    });
+    $('#createAssetForm').submit(function(e) {
+        e.preventDefault();
+        var assetsConsumed = [];
+        $('#assetsConsumedContainer .input-group').each(function() {
+            var checkbox = $(this).find('input[type="checkbox"]');
+            var amountInput = $(this).find('input[type="number"]');
+            if (checkbox.is(':checked') && amountInput.val()) {
+                assetsConsumed.push([
+                    checkbox.val(),  // Asset code
+                    parseInt(amountInput.val(), 10)  // Amount to be consumed
+                ]);
+            }
+        });
+        var formData = {
+            code: $('#codeInput').val(),
+            description: $('#descriptionInput').val(),
+            amount: parseInt($('#amountInput').val(), 10),
+            assets_consumed: assetsConsumed
+        };
+        var apiUrl = assetsConsumed.length > 0 ? '{{ api_create_with_consume }}' : '{{ api_create }}';
+
+
+        $.ajax({
+            type: 'POST',
+            url: apiUrl,
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function(response) {
+                $('#formResult').html('Asset created successfully!');
+                setTimeout(function() { location.reload(); }, 2000);
+            },
+            error: function(response) {
+                $('#formResult').html('Error: ' + response.responseText);
+            }
+        });
+});
+    </script>
+{% endblock %}

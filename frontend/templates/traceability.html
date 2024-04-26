@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+
+{% block head %}
+
+{% endblock %}
+
+{% block section_title %}Assets{% endblock %}
+
+{% block content %}
+<div class="container">
+        <div class="container mt-4">
+        <h1>Asset Traceability</h1>
+        <input type="text" id="codeInput" class="form-control mt-2" placeholder="Enter asset code">
+        <button id="searchBtn" class="btn btn-primary mt-2">Search</button>
+        <pre id="resultArea" class="mt-3"></pre>
+    </div>
+
+    <div class="modal fade" id="assetModal" tabindex="-1" aria-labelledby="assetModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="assetModalLabel">Asset Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <pre id="assetDetails"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+
+    <script>
+    const apiBaseURL = '{{ api_read }}';
+    function fetchAssetDetailModal(_this) {
+        $('#assetDetails').text('Loading...');
+        $('#assetModal').modal('show');
+
+        $.ajax({
+            url: apiBaseURL +  $(_this).data('code') + '{{ api_history }}',
+            success: function(data) {
+                $('#assetDetails').text(JSON.stringify(data, null, 2));
+            },
+            error: function() {
+                $('#assetDetails').text('Failed to load asset details from API2.');
+            }
+        });
+    }
+   $(document).ready(function() {
+
+
+
+    function fetchAssetDetails(code, resultObj, callback) {
+            $.ajax({
+                url: apiBaseURL + code,
+                success: function(data) {
+                    data.code = `<a href='#' class='code-link' data-code='${data.code}' onclick='fetchAssetDetailModal(this)'>${data.code}</a>`;
+                    if (data.assets_consumed && data.assets_consumed.length > 0) {
+                        let consumed = {};
+                        let count = data.assets_consumed.length;
+                        data.assets_consumed.forEach(asset => {
+                            fetchAssetDetails(asset.id, consumed, function() {
+                                count--;
+                                if (count === 0) {
+                                    data.assets_consumed = consumed;
+                                    resultObj[data.code] = data;
+                                    callback();
+                                }
+                            });
+                        });
+                    } else {
+                        resultObj[data.code] = data;
+                        callback();
+                    }
+                }
+            });
+        }
+
+        $('#searchBtn').click(function() {
+            let code = $('#codeInput').val().trim();
+            $('#resultArea').text('Loading...');
+            let results = {};
+            fetchAssetDetails(code, results, function() {
+                $('#resultArea').html(JSON.stringify(results, null, 2));
+                $('.code-link').on('click', function(e) {
+                    e.preventDefault();
+                    let code = $(this).data('code');
+                    $('#assetDetails').text(JSON.stringify(results[code], null, 2));
+                    $('#assetModal').modal('show');
+                });
+            });
+        });
+
+
+
+
+    });
+
+    </script>
+
+{% endblock %}
