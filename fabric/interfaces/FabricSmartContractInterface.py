@@ -1,137 +1,97 @@
-from core.interfaces.SmartContractInterface import SmartContractInterface
-
-import subprocess
-import os
 import json
 
+from django.conf import settings
+
+from core.interfaces.SmartContractInterface import SmartContractInterface
 
 class FabricSmartContractInterface(SmartContractInterface):
+    ORGS = settings.ORGS
+    PEERS = ['peer0.org1.example.com', 'peer0.org2.example.com']
+    CC_NAME = "SmartContract"  # Contract name, set on subclass
 
-    def __init__(self, binary_path: str, fabric_cfg_path: str,
-                 peer_msp_id: str, peer_msp_config_path: str, peer_tls_root_cert: str,
-                 peer_address: str,
-                 channel: str, chaincode: str,
-                 orderer: list = [],
-                 endorsement_peers: list = []):
+    def __init__(self, user: str, org: int):
+        if self.CC_NAME == "":
+            raise Exception("CC_NAME not defined, extends this class an define it")
+        if user not in "Admin" and "User" not in user:
+            # The 2 organizations have created the users Admin and User1 - User100
+            raise Exception("User must be Admin or UserX, here X is a number")
+        if org < 1 or org >= len(self.ORGS) + 1:
+            raise Exception("Organization have to be gretter than 0 and lower than {}".format(str(len(self.ORGS) + 1)))
+        org -= 1  # Org 1 is on position 0
+
+        self.cli = settings.FABRIC_CLIENT
+        self.user = self.cli.get_user(org_name=self.ORGS[org], name=user)
+
+        self.peer = self.PEERS[org]
+        self.channel = "mychannel"
+
+    def _query(self, fcn: str, args: tuple[str]) -> str:
         """
-        :param binary_path: Path to fabric binaries
-        :param fabric_cfg_path: Path to fabric config folder
-        :param peer_msp_id: ID of local msp
-        :param peer_msp_config_path: Path to user msp
-        :param peer_tls_root_cert: Path to the public key of TLS-CA
-        :param peer_address: Hostname and port of the current peer witch locate this code.
-
-        :param channel: Channel where smart contract was locate
-        :param chaincode: Chain code name to target
-
-
-        :param orderer: Data to connect to the orderer:
-                    ['endpoint', 'orderer_tls_hostname_override', 'tls_root_cert_files_orderer']
-                    endpoint: It is the network address of a orderer together with its port, for example localhost:7050
-                    orderer_tls_hostname_override: The hostname override to use when validating the TLS connection to
-                    the orderer: orderer.example.com
-                    tls_root_cert_files_orderer: The location of the tls CA public certificate used by the peer
-
-        :param endorsement_peers: Nodes to point when endorsement will be required estruct:
-                    [['addr_peer1', 'tls_root_cert_files_peer1'], ['addr_peer2', 'tls_root_cert_files_peer2'], ... ].
-                        addr_peer: It is the network address of a peer together with its port, for example localhost:9051
-                        tls_root_cert_files_peer: The location of the tls CA public certificate used by the peer
-
-
-
+        Query the ledger without modifying it
+        :param fcn: Contract function name
+        :param args: Arguments to pass to the function must be strings. An array of several parameters would be represented "['1,2', 'Other value']"
+        :return: Function response string
         """
-        self.env = dict(os.environ)
-        self.env['PATH'] = "$PATH:" + binary_path
-        self.env['FABRIC_CFG_PATH'] = fabric_cfg_path
-        self.env['CORE_PEER_TLS_ENABLED'] = "true"
-        self.env['CORE_PEER_LOCALMSPID'] = peer_msp_id
-        self.env['CORE_PEER_MSPCONFIGPATH'] = peer_msp_config_path
-        self.env['CORE_PEER_TLS_ROOTCERT_FILE'] = peer_tls_root_cert
-        self.env['CORE_PEER_ADDRESS'] = peer_address
+        response = self.loop.run_until_complete(self.cli.chaincode_query)(
+            requestor=self.user,
+            channel_name=self.channel,
+            peers=self.PEERS,
+            args=args,
+            cc_name=self.CC_NAME,
+            fcn=fcn,
+        )
+        return response
 
-        self.binary_path = binary_path
-        self.channel = channel
-        self.chaincode = chaincode
-        self.orderer = orderer
-        self.endorsement_peers = endorsement_peers
 
-    def _generate_secure_command(self, command) -> str:
-        base = "peer chaincode query -C {} -n {} -c ".format(self.channel, self.chaincode)
-        return base + command
+    def _invoke(self, fcn: str, args: list[str]) -> str:
+        """
+        Query the ledger without modifying it
+        :param fcn: Contract function name
+        :param args: Arguments to pass to the function must be strings. An array of several parameters would be represented "['1,2', 'Other value']"
+        :return: Function response string
+        """
+        #
+        response = self.cli.chaincode_invoke(
+            requestor=self.user,
+            channel_name=self.channel,
+            peers=self.PEERS,
+            args=args,
+            cc_name=self.CC_NAME,
+            fcn=fcn,
+        )
+        return response
 
-    def _generate_command_that_needs_to_fulfill_a_policy(self, command) -> str:
-        base = "peer chaincode invoke -o {} --ordererTLSHostnameOverride {} --tls --cafile {} -C {} -n {} ".format(
-            self.orderer[0],
-            self.orderer[1],
-            self.orderer[2],
-            self.channel,
-            self.chaincode)
-        for peer in self.endorsement_peers:
-            base = base + "--peerAddresses {} --tlsRootCertFiles {} ".format(peer[0], peer[1])
 
-        base = base + "-c "
-        return base + command
 
-    def _clean_payload_response(self, unclean_response: str) -> str:
-        response_string = unclean_response.replace('\\"', '"')
-        if len(response_string) < 5:
-            return ''
-        json_data = json.loads(response_string)
-        return json_data
 
-    def _run_and_process_command(self, command):
-        result = subprocess.run(command, shell=True, capture_output=True, text=True, env=self.env)
-        if result.stderr:
-            if "Error" in result.stderr:
-                print("Command: " + str(command))
-                print("Error: " + str(result.stderr))
-                raise Exception(result.stderr)
-        return self._clean_payload_response(str(result.stdout))
-
-    def create_asset(self, code: str, description: str, amount: int) -> str:
-        command = self._generate_command_that_needs_to_fulfill_a_policy(
-            '\'{"function":"' + self._get_function_names_map()[
-                'create'] + '","Args":["' + code + '","' + description + '","' + str(amount) + '"]}\'')
-        return self._run_and_process_command(command)
-
+    def  create_asset(self, code: str, description: str, amount: int) -> str:
+        return self._invoke(self._get_function_names_map()['create'], [str(code), str(description), str(amount)])
 
     def read_asset(self, code: str) -> str:
-        command = self._generate_secure_command(
-            '\'{"Args":["' + self._get_function_names_map()['read'] + '", "' + code + '"]}\'')
-        return self._run_and_process_command(command)
+        return self._invoke(self._get_function_names_map()['read'], [str(code)])
 
     def get_all_assets(self) -> str:
-        command = self._generate_secure_command('\'{"Args":["' + self._get_function_names_map()['all'] + '"]}\'')
-        # print(command)
-        return self._run_and_process_command(command)
+        return self._invoke(self._get_function_names_map()['all'], [])
 
     def consume_and_create(self, code: str, description: str, amount: int, assets_consumed: [(str, int)]) -> str:
-        assets_consumed_modified = "["
-        for asset in assets_consumed:
-            assets_consumed_modified += "{\\\"ID\\\":\\\"" + asset[0] + "\\\",\\\"Amount\\\":" + str(asset[1]) + "},"
-        assets_consumed_modified = assets_consumed_modified[:-1]
-        assets_consumed_modified += "]"
-        command = self._generate_command_that_needs_to_fulfill_a_policy(
-            '\'{"function":"' + self._get_function_names_map()[
-                'consume_and_create'] + '","Args":["' + code + '","' + description + '","' + str(amount) + '","' + str(assets_consumed_modified) + '"]}\'')
-        return self._run_and_process_command(command)
+        assets_consumed_modified = [{"ID": str(item[0]), "Amount": item[1]} for item in assets_consumed]
+        assets_consumed_modified = json.dumps(assets_consumed_modified)
+
+        return self._invoke(self._get_function_names_map()['consume_and_create'], [str(code), str(description), str(amount), str(assets_consumed_modified)])
 
     def propose_transfer(self, code: str, send_to: str) -> str:
-        command = self._generate_command_that_needs_to_fulfill_a_policy(
-            '\'{"function":"' + self._get_function_names_map()['propose_transfer'] + '","Args":["' + code + '","' + send_to + '"]}\'')
-        return self._run_and_process_command(command)
+        return self._invoke(self._get_function_names_map()['propose_transfer'],
+                            [str(code), str(send_to)])
 
     def accept_transfer(self, code: str) -> str:
-        command = self._generate_command_that_needs_to_fulfill_a_policy(
-            '\'{"function":"' + self._get_function_names_map()['accept_transfer'] + '","Args":["' + code +  '"]}\'')
-        return self._run_and_process_command(command)
+        return self._invoke(self._get_function_names_map()['accept_transfer'],
+                            [str(code)])
 
     def consume(self, code: str, amount: int) -> str:
-        command = self._generate_command_that_needs_to_fulfill_a_policy(
-            '\'{"function":"' + self._get_function_names_map()['consume'] + '","Args":["' + code + '","' + str(amount) + '"]}\'')
-        return self._run_and_process_command(command)
+        return self._invoke(self._get_function_names_map()['consume'],
+                            [str(code), str(amount)])
 
     def history(self, code: str) -> str:
-        command = self._generate_secure_command(
-            '\'{"Args":["' + self._get_function_names_map()['history'] + '", "' + code + '"]}\'')
-        return self._run_and_process_command(command)
+        return self._invoke(self._get_function_names_map()['history'],
+                            [str(code)])
+

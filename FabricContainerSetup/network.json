@@ -1,0 +1,932 @@
+{
+  "name": "sample-network",
+  "description": "Sample network contains 4 peers (2 orgs), 1 orderer and 2 cas for Python SDK testing",
+  "version": "0.1",
+  "client": {
+    "organization": "Org1",
+    "credentialStore": {
+      "path": "/tmp/hfc-kvs",
+      "cryptoStore": {
+        "path": "/tmp/hfc-cvs"
+      },
+      "wallet": "wallet-name"
+    }
+  },
+  "organizations": {
+    "orderer.example.com": {
+      "mspid": "OrdererMSP",
+      "orderers": [
+        "orderer.example.com"
+      ],
+      "certificateAuthorities": [
+        "ca-orderer"
+      ],
+      "users": {
+        "Admin": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/ordererOrganizations/example.com/users/Admin@example.com/msp/signcerts/Admin@example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/ordererOrganizations/example.com/users/Admin@example.com/msp/keystore/priv_sk"
+        }
+      }
+    },
+    "org1.example.com": {
+      "mspid": "Org1MSP",
+      "peers": [
+        "peer0.org1.example.com",
+        "peer1.org1.example.com"
+      ],
+      "certificateAuthorities": [
+        "ca-org1"
+      ],
+      "users": {
+        "Admin": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User1": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/signcerts/User1@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User2": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User2@org1.example.com/msp/signcerts/User2@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User2@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User3": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User3@org1.example.com/msp/signcerts/User3@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User3@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User4": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User4@org1.example.com/msp/signcerts/User4@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User4@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User5": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User5@org1.example.com/msp/signcerts/User5@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User5@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User6": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User6@org1.example.com/msp/signcerts/User6@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User6@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User7": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User7@org1.example.com/msp/signcerts/User7@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User7@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User8": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User8@org1.example.com/msp/signcerts/User8@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User8@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User9": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User9@org1.example.com/msp/signcerts/User9@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User9@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User10": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User10@org1.example.com/msp/signcerts/User10@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User10@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User11": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User11@org1.example.com/msp/signcerts/User11@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User11@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User12": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User12@org1.example.com/msp/signcerts/User12@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User12@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User13": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User13@org1.example.com/msp/signcerts/User13@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User13@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User14": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User14@org1.example.com/msp/signcerts/User14@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User14@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User15": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User15@org1.example.com/msp/signcerts/User15@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User15@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User16": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User16@org1.example.com/msp/signcerts/User16@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User16@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User17": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User17@org1.example.com/msp/signcerts/User17@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User17@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User18": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User18@org1.example.com/msp/signcerts/User18@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User18@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User19": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User19@org1.example.com/msp/signcerts/User19@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User19@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User20": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User20@org1.example.com/msp/signcerts/User20@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User20@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User21": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User21@org1.example.com/msp/signcerts/User21@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User21@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User22": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User22@org1.example.com/msp/signcerts/User22@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User22@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User23": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User23@org1.example.com/msp/signcerts/User23@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User23@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User24": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User24@org1.example.com/msp/signcerts/User24@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User24@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User25": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User25@org1.example.com/msp/signcerts/User25@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User25@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User26": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User26@org1.example.com/msp/signcerts/User26@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User26@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User27": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User27@org1.example.com/msp/signcerts/User27@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User27@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User28": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User28@org1.example.com/msp/signcerts/User28@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User28@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User29": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User29@org1.example.com/msp/signcerts/User29@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User29@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User30": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User30@org1.example.com/msp/signcerts/User30@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User30@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User31": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User31@org1.example.com/msp/signcerts/User31@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User31@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User32": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User32@org1.example.com/msp/signcerts/User32@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User32@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User33": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User33@org1.example.com/msp/signcerts/User33@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User33@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User34": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User34@org1.example.com/msp/signcerts/User34@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User34@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User35": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User35@org1.example.com/msp/signcerts/User35@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User35@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User36": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User36@org1.example.com/msp/signcerts/User36@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User36@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User37": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User37@org1.example.com/msp/signcerts/User37@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User37@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User38": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User38@org1.example.com/msp/signcerts/User38@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User38@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User39": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User39@org1.example.com/msp/signcerts/User39@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User39@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User40": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User40@org1.example.com/msp/signcerts/User40@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User40@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User41": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User41@org1.example.com/msp/signcerts/User41@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User41@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User42": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User42@org1.example.com/msp/signcerts/User42@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User42@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User43": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User43@org1.example.com/msp/signcerts/User43@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User43@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User44": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User44@org1.example.com/msp/signcerts/User44@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User44@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User45": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User45@org1.example.com/msp/signcerts/User45@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User45@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User46": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User46@org1.example.com/msp/signcerts/User46@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User46@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User47": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User47@org1.example.com/msp/signcerts/User47@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User47@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User48": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User48@org1.example.com/msp/signcerts/User48@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User48@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User49": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User49@org1.example.com/msp/signcerts/User49@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User49@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User50": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User50@org1.example.com/msp/signcerts/User50@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User50@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User51": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User51@org1.example.com/msp/signcerts/User51@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User51@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User52": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User52@org1.example.com/msp/signcerts/User52@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User52@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User53": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User53@org1.example.com/msp/signcerts/User53@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User53@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User54": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User54@org1.example.com/msp/signcerts/User54@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User54@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User55": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User55@org1.example.com/msp/signcerts/User55@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User55@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User56": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User56@org1.example.com/msp/signcerts/User56@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User56@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User57": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User57@org1.example.com/msp/signcerts/User57@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User57@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User58": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User58@org1.example.com/msp/signcerts/User58@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User58@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User59": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User59@org1.example.com/msp/signcerts/User59@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User59@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User60": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User60@org1.example.com/msp/signcerts/User60@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User60@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User61": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User61@org1.example.com/msp/signcerts/User61@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User61@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User62": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User62@org1.example.com/msp/signcerts/User62@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User62@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User63": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User63@org1.example.com/msp/signcerts/User63@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User63@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User64": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User64@org1.example.com/msp/signcerts/User64@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User64@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User65": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User65@org1.example.com/msp/signcerts/User65@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User65@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User66": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User66@org1.example.com/msp/signcerts/User66@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User66@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User67": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User67@org1.example.com/msp/signcerts/User67@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User67@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User68": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User68@org1.example.com/msp/signcerts/User68@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User68@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User69": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User69@org1.example.com/msp/signcerts/User69@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User69@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User70": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User70@org1.example.com/msp/signcerts/User70@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User70@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User71": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User71@org1.example.com/msp/signcerts/User71@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User71@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User72": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User72@org1.example.com/msp/signcerts/User72@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User72@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User73": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User73@org1.example.com/msp/signcerts/User73@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User73@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User74": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User74@org1.example.com/msp/signcerts/User74@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User74@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User75": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User75@org1.example.com/msp/signcerts/User75@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User75@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User76": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User76@org1.example.com/msp/signcerts/User76@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User76@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User77": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User77@org1.example.com/msp/signcerts/User77@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User77@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User78": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User78@org1.example.com/msp/signcerts/User78@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User78@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User79": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User79@org1.example.com/msp/signcerts/User79@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User79@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User80": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User80@org1.example.com/msp/signcerts/User80@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User80@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User81": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User81@org1.example.com/msp/signcerts/User81@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User81@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User82": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User82@org1.example.com/msp/signcerts/User82@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User82@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User83": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User83@org1.example.com/msp/signcerts/User83@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User83@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User84": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User84@org1.example.com/msp/signcerts/User84@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User84@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User85": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User85@org1.example.com/msp/signcerts/User85@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User85@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User86": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User86@org1.example.com/msp/signcerts/User86@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User86@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User87": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User87@org1.example.com/msp/signcerts/User87@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User87@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User88": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User88@org1.example.com/msp/signcerts/User88@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User88@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User89": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User89@org1.example.com/msp/signcerts/User89@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User89@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User90": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User90@org1.example.com/msp/signcerts/User90@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User90@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User91": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User91@org1.example.com/msp/signcerts/User91@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User91@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User92": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User92@org1.example.com/msp/signcerts/User92@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User92@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User93": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User93@org1.example.com/msp/signcerts/User93@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User93@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User94": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User94@org1.example.com/msp/signcerts/User94@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User94@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User95": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User95@org1.example.com/msp/signcerts/User95@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User95@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User96": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User96@org1.example.com/msp/signcerts/User96@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User96@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User97": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User97@org1.example.com/msp/signcerts/User97@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User97@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User98": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User98@org1.example.com/msp/signcerts/User98@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User98@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User99": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User99@org1.example.com/msp/signcerts/User99@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User99@org1.example.com/msp/keystore/priv_sk"
+        },
+        "User100": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User100@org1.example.com/msp/signcerts/User100@org1.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/users/User100@org1.example.com/msp/keystore/priv_sk"
+        }
+      }
+    },
+    "org2.example.com": {
+      "mspid": "Org2MSP",
+      "peers": [
+        "peer0.org2.example.com",
+        "peer1.org2.example.com"
+      ],
+      "certificateAuthorities": [
+        "ca-org2"
+      ],
+      "users": {
+        "Admin": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/signcerts/Admin@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User1": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User1@org2.example.com/msp/signcerts/User1@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User1@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User2": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User2@org2.example.com/msp/signcerts/User2@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User2@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User3": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User3@org2.example.com/msp/signcerts/User3@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User3@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User4": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User4@org2.example.com/msp/signcerts/User4@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User4@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User5": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User5@org2.example.com/msp/signcerts/User5@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User5@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User6": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User6@org2.example.com/msp/signcerts/User6@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User6@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User7": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User7@org2.example.com/msp/signcerts/User7@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User7@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User8": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User8@org2.example.com/msp/signcerts/User8@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User8@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User9": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User9@org2.example.com/msp/signcerts/User9@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User9@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User10": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User10@org2.example.com/msp/signcerts/User10@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User10@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User11": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User11@org2.example.com/msp/signcerts/User11@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User11@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User12": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User12@org2.example.com/msp/signcerts/User12@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User12@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User13": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User13@org2.example.com/msp/signcerts/User13@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User13@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User14": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User14@org2.example.com/msp/signcerts/User14@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User14@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User15": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User15@org2.example.com/msp/signcerts/User15@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User15@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User16": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User16@org2.example.com/msp/signcerts/User16@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User16@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User17": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User17@org2.example.com/msp/signcerts/User17@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User17@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User18": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User18@org2.example.com/msp/signcerts/User18@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User18@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User19": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User19@org2.example.com/msp/signcerts/User19@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User19@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User20": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User20@org2.example.com/msp/signcerts/User20@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User20@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User21": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User21@org2.example.com/msp/signcerts/User21@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User21@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User22": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User22@org2.example.com/msp/signcerts/User22@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User22@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User23": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User23@org2.example.com/msp/signcerts/User23@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User23@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User24": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User24@org2.example.com/msp/signcerts/User24@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User24@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User25": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User25@org2.example.com/msp/signcerts/User25@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User25@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User26": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User26@org2.example.com/msp/signcerts/User26@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User26@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User27": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User27@org2.example.com/msp/signcerts/User27@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User27@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User28": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User28@org2.example.com/msp/signcerts/User28@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User28@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User29": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User29@org2.example.com/msp/signcerts/User29@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User29@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User30": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User30@org2.example.com/msp/signcerts/User30@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User30@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User31": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User31@org2.example.com/msp/signcerts/User31@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User31@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User32": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User32@org2.example.com/msp/signcerts/User32@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User32@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User33": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User33@org2.example.com/msp/signcerts/User33@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User33@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User34": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User34@org2.example.com/msp/signcerts/User34@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User34@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User35": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User35@org2.example.com/msp/signcerts/User35@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User35@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User36": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User36@org2.example.com/msp/signcerts/User36@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User36@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User37": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User37@org2.example.com/msp/signcerts/User37@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User37@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User38": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User38@org2.example.com/msp/signcerts/User38@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User38@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User39": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User39@org2.example.com/msp/signcerts/User39@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User39@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User40": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User40@org2.example.com/msp/signcerts/User40@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User40@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User41": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User41@org2.example.com/msp/signcerts/User41@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User41@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User42": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User42@org2.example.com/msp/signcerts/User42@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User42@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User43": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User43@org2.example.com/msp/signcerts/User43@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User43@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User44": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User44@org2.example.com/msp/signcerts/User44@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User44@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User45": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User45@org2.example.com/msp/signcerts/User45@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User45@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User46": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User46@org2.example.com/msp/signcerts/User46@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User46@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User47": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User47@org2.example.com/msp/signcerts/User47@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User47@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User48": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User48@org2.example.com/msp/signcerts/User48@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User48@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User49": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User49@org2.example.com/msp/signcerts/User49@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User49@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User50": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User50@org2.example.com/msp/signcerts/User50@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User50@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User51": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User51@org2.example.com/msp/signcerts/User51@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User51@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User52": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User52@org2.example.com/msp/signcerts/User52@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User52@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User53": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User53@org2.example.com/msp/signcerts/User53@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User53@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User54": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User54@org2.example.com/msp/signcerts/User54@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User54@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User55": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User55@org2.example.com/msp/signcerts/User55@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User55@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User56": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User56@org2.example.com/msp/signcerts/User56@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User56@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User57": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User57@org2.example.com/msp/signcerts/User57@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User57@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User58": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User58@org2.example.com/msp/signcerts/User58@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User58@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User59": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User59@org2.example.com/msp/signcerts/User59@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User59@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User60": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User60@org2.example.com/msp/signcerts/User60@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User60@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User61": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User61@org2.example.com/msp/signcerts/User61@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User61@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User62": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User62@org2.example.com/msp/signcerts/User62@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User62@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User63": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User63@org2.example.com/msp/signcerts/User63@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User63@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User64": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User64@org2.example.com/msp/signcerts/User64@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User64@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User65": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User65@org2.example.com/msp/signcerts/User65@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User65@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User66": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User66@org2.example.com/msp/signcerts/User66@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User66@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User67": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User67@org2.example.com/msp/signcerts/User67@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User67@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User68": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User68@org2.example.com/msp/signcerts/User68@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User68@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User69": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User69@org2.example.com/msp/signcerts/User69@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User69@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User70": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User70@org2.example.com/msp/signcerts/User70@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User70@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User71": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User71@org2.example.com/msp/signcerts/User71@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User71@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User72": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User72@org2.example.com/msp/signcerts/User72@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User72@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User73": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User73@org2.example.com/msp/signcerts/User73@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User73@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User74": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User74@org2.example.com/msp/signcerts/User74@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User74@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User75": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User75@org2.example.com/msp/signcerts/User75@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User75@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User76": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User76@org2.example.com/msp/signcerts/User76@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User76@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User77": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User77@org2.example.com/msp/signcerts/User77@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User77@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User78": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User78@org2.example.com/msp/signcerts/User78@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User78@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User79": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User79@org2.example.com/msp/signcerts/User79@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User79@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User80": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User80@org2.example.com/msp/signcerts/User80@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User80@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User81": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User81@org2.example.com/msp/signcerts/User81@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User81@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User82": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User82@org2.example.com/msp/signcerts/User82@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User82@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User83": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User83@org2.example.com/msp/signcerts/User83@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User83@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User84": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User84@org2.example.com/msp/signcerts/User84@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User84@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User85": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User85@org2.example.com/msp/signcerts/User85@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User85@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User86": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User86@org2.example.com/msp/signcerts/User86@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User86@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User87": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User87@org2.example.com/msp/signcerts/User87@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User87@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User88": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User88@org2.example.com/msp/signcerts/User88@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User88@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User89": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User89@org2.example.com/msp/signcerts/User89@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User89@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User90": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User90@org2.example.com/msp/signcerts/User90@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User90@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User91": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User91@org2.example.com/msp/signcerts/User91@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User91@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User92": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User92@org2.example.com/msp/signcerts/User92@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User92@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User93": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User93@org2.example.com/msp/signcerts/User93@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User93@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User94": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User94@org2.example.com/msp/signcerts/User94@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User94@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User95": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User95@org2.example.com/msp/signcerts/User95@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User95@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User96": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User96@org2.example.com/msp/signcerts/User96@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User96@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User97": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User97@org2.example.com/msp/signcerts/User97@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User97@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User98": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User98@org2.example.com/msp/signcerts/User98@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User98@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User99": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User99@org2.example.com/msp/signcerts/User99@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User99@org2.example.com/msp/keystore/priv_sk"
+        },
+        "User100": {
+          "cert": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User100@org2.example.com/msp/signcerts/User100@org2.example.com-cert.pem",
+          "private_key": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/users/User100@org2.example.com/msp/keystore/priv_sk"
+        }
+      }
+    }
+  },
+  "orderers": {
+    "orderer.example.com": {
+      "url": "localhost:7050",
+      "grpcOptions": {
+        "grpc.ssl_target_name_override": "orderer.example.com",
+        "grpc-max-send-message-length": 15
+      },
+      "tlsCACerts": {
+        "path": "./FabricContainerSetup/fabric-samples/test-network/organizations/ordererOrganizations/example.com/tlsca/tlsca.example.com-cert.pem"
+      }
+    }
+  },
+  "peers": {
+    "peer0.org1.example.com": {
+      "url": "localhost:7051",
+      "eventUrl": "localhost:7053",
+      "grpcOptions": {
+        "grpc.ssl_target_name_override": "peer0.org1.example.com",
+        "grpc.http2.keepalive_time": 15
+      },
+      "tlsCACerts": {
+        "path": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp/tlscacerts/tlsca.org1.example.com-cert.pem"
+      }
+    },
+    "peer0.org2.example.com": {
+      "url": "localhost:9051",
+      "eventUrl": "localhost:9053",
+      "grpcOptions": {
+        "grpc.ssl_target_name_override": "peer0.org2.example.com",
+        "grpc.http2.keepalive_time": 15
+      },
+      "tlsCACerts": {
+        "path": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/msp/tlscacerts/tlsca.org2.example.com-cert.pem"
+      }
+    }
+  },
+  "certificateAuthorities": {
+    "ca-org1": {
+      "url": "https://localhost:7054",
+      "grpcOptions": {
+        "verify": true
+      },
+      "tlsCACerts": {
+        "path": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org1.example.com/ca/org1.example.com-cert.pem"
+      },
+      "registrar": [
+        {
+          "enrollId": "admin",
+          "enrollSecret": "adminpw"
+        }
+      ]
+    },
+    "ca-org2": {
+      "url": "https://localhost:8054",
+      "grpcOptions": {
+        "verify": true
+      },
+      "tlsCACerts": {
+        "path": "./FabricContainerSetup/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com/ca/org2.example.com-cert.pem"
+      },
+      "registrar": [
+        {
+          "enrollId": "admin",
+          "enrollSecret": "adminpw"
+        }
+      ]
+    }
+  }
+}

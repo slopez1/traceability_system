@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import base64
 from pathlib import Path
-
+from hfc.fabric import Client
 import os
 
 from OpenSSL import crypto
@@ -32,6 +32,14 @@ if BLOCKCHAIN_LAYER not in BLOCKCHAIN_LAYER_OPTIONS:
                                                                               str(BLOCKCHAIN_LAYER_OPTIONS)))
 
                                                                               # Quick-start development settings - unsuitable for production
+
+ORGS = ["org1.example.com", "org2.example.com"]
+FABRIC_USER = os.getenv("TRACEABILITY_FABRIC_USER", "User1")
+FABRIC_ORG = int(os.getenv("TRACEABILITY_FABRIC_ORG", "1")) # 1 o 2
+FABRIC_NET_PROFILE = "./FabricContainerSetup/network.json"
+FABRIC_CLIENT = Client(net_profile=FABRIC_NET_PROFILE)
+FABRIC_CLIENT.new_channel('mychannel')
+
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -90,79 +98,44 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'traceability_system.wsgi.application'
+ASGI_APPLICATION = 'traceability_system.asgi.application'
 
 
-if BLOCKCHAIN_LAYER == 'Fabric':
-    def get_identity(cert_data: str) -> str:
-        certificate = crypto.load_certificate(crypto.FILETYPE_PEM, cert_data)
-        # Get cert subject
-        subject = certificate.get_subject()
 
-        # Extract the subjects components
-        common_name = subject.CN
-        organizational_unit = subject.OU
-        locality = subject.L
-        state = subject.ST
-        country = subject.C
+def get_identity(cert_data: str) -> str:
+    certificate = crypto.load_certificate(crypto.FILETYPE_PEM, cert_data)
+    # Get cert subject
+    subject = certificate.get_subject()
 
-        # Build cert identity
-        identity = f"x509::CN={common_name},OU={organizational_unit},L={locality},ST={state},C={country}::"
+    # Extract the subjects components
+    common_name = subject.CN
+    organizational_unit = subject.OU
+    locality = subject.L
+    state = subject.ST
+    country = subject.C
 
-        # Get cert issuer
-        issuer = certificate.get_issuer()
+    # Build cert identity
+    identity = f"x509::CN={common_name},OU={organizational_unit},L={locality},ST={state},C={country}::"
 
-        # Extract cert issuer
-        issuer_common_name = issuer.CN
-        issuer_organization = issuer.O
-        issuer_locality = issuer.L
-        issuer_state = issuer.ST
-        issuer_country = issuer.C
+    # Get cert issuer
+    issuer = certificate.get_issuer()
 
-        # Add emiter id to the cet id
-        identity += f"CN={issuer_common_name},O={issuer_organization},L={issuer_locality},ST={issuer_state},C={issuer_country}"
-        #return identity
-        return base64.b64encode(identity.encode('utf-8')).decode('utf-8')
+    # Extract cert issuer
+    issuer_common_name = issuer.CN
+    issuer_organization = issuer.O
+    issuer_locality = issuer.L
+    issuer_state = issuer.ST
+    issuer_country = issuer.C
 
-
-    def extract_certificate_identity(cert_file: str) -> str:
-        # Load certificate
-        with open(cert_file, 'r') as file:
-            cert_data = file.read()
-        return get_identity(cert_data)
+    # Add emiter id to the cet id
+    identity += f"CN={issuer_common_name},O={issuer_organization},L={issuer_locality},ST={issuer_state},C={issuer_country}"
+    #return identity
+    return str(base64.b64encode(identity.encode('utf-8')).decode('utf-8'))
 
 
-    MANDATORY_ENV_VARS = ["TRACEABILITY_SYSTEM_BINARY_PATH",
-                          "TRACEABILITY_SYSTEM_CONFIG_PATH",
-                          "TRACEABILITY_SYSTEM_MSP_ID",
-                          "TRACEABILITY_SYSTEM_MSP_CONFIG_PATH",
-                          "TRACEABILITY_SYSTEM_TLS_ROOT_CERT",
-                          "TRACEABILITY_SYSTEM_PEER_ADDRESS",
-                          "TRACEABILITY_SYSTEM_CHANNEL",
-                          "TRACEABILITY_SYSTEM_CHAINCODE",
-                          "TRACEABILITY_SYSTEM_OWNER_CERT",
-                          "TRACEABILITY_SYSTEM_OWNER_PRIVATE_CERT",
-                          "TRACEABILITY_SYSTEM_CA_ROOT_CERT",
-                          ]
 
-    for var in MANDATORY_ENV_VARS:
-        if var not in os.environ:
-            raise EnvironmentError("Failed because {} is not set.".format(var))
-
-    BINARY_PATH = os.getenv('TRACEABILITY_SYSTEM_BINARY_PATH')  # Path to fabric binaries
-    CONFIG_PATH = os.getenv('TRACEABILITY_SYSTEM_CONFIG_PATH')  # Path to fabric config folder
-    MSP_ID = os.getenv('TRACEABILITY_SYSTEM_MSP_ID')  # ID of local msp
-    MSP_CONFIG_PATH = os.getenv('TRACEABILITY_SYSTEM_MSP_CONFIG_PATH')  # Path to user msp
-    TLS_ROOT_CERT = os.getenv('TRACEABILITY_SYSTEM_TLS_ROOT_CERT')  # Path to the public key of TLS-CA
-    PEER_ADDRESS = os.getenv(
-        'TRACEABILITY_SYSTEM_PEER_ADDRESS')  # Hostname and port of the current peer witch locate this code.
-    CHANNEL = os.getenv('TRACEABILITY_SYSTEM_CHANNEL')  # Channel where smart contract was locate
-    CHAINCODE = os.getenv('TRACEABILITY_SYSTEM_CHAINCODE')  # Channel where smart contract was locate
-    OWNER_CERT = os.getenv('TRACEABILITY_SYSTEM_OWNER_CERT')  # Path to owner public cert
-    OWNER_PRIVATE_CERT = os.getenv('TRACEABILITY_SYSTEM_OWNER_PRIVATE_CERT')  # Path to owner public cert
-    CA_ROOT_CERT = os.getenv('TRACEABILITY_SYSTEM_CA_ROOT_CERT')  # Path to the public key of CA
-    OWNER_IDENTITY = extract_certificate_identity(OWNER_CERT)
-
+OWNER_IDENTITY = get_identity(FABRIC_CLIENT.get_user(org_name=ORGS[FABRIC_ORG-1], name=FABRIC_USER).enrollment._cert)
+print(OWNER_IDENTITY)
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases

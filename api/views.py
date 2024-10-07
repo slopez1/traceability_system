@@ -1,15 +1,16 @@
+import asyncio
 import json
 
-from django.conf import settings
-from django.shortcuts import render
+from asgiref.sync import async_to_sync
 
 # Create your views here.
-from rest_framework.views import APIView
+from adrf.views import APIView
+from django.conf import settings
 from rest_framework.response import Response
 from rest_framework import status
 
 from fabric.interfaces.FabricSmartContractInterface import FabricSmartContractInterface
-from fabric.models import OrdererNode, PeerNode
+
 
 
 class InterfaceGeneratorSingelton(type):
@@ -21,30 +22,9 @@ class InterfaceGeneratorSingelton(type):
         Possible changes to the value of the `__init__` argument do not affect
         the returned instance.
         """
-        if cls not in cls._instances:
-            instance = super().__call__(*args, **kwargs)
-            cls._instances[cls] = instance
-            peers = PeerNode.objects.all()
-            orderers = OrdererNode.objects.all()
-            if not peers.exists():
-                raise Exception("You need at least one peers for the endorsement policies")
-
-            if not orderers.exists():
-                raise Exception("You need at least two orderers for the endorsement policies")
-            orderer = orderers.first()
-            cls.interface = FabricSmartContractInterface(binary_path=settings.BINARY_PATH,
-                                                         fabric_cfg_path=settings.CONFIG_PATH,
-                                                         peer_msp_id=settings.MSP_ID,
-                                                         peer_msp_config_path=settings.MSP_CONFIG_PATH,
-                                                         peer_tls_root_cert=settings.TLS_ROOT_CERT,
-                                                         peer_address=settings.PEER_ADDRESS,
-                                                         channel=settings.CHANNEL,
-                                                         chaincode=settings.CHAINCODE,
-                                                         orderer=[orderer.host, orderer.tls_host_override,
-                                                                  orderer.path_to_tls_ca_cert],
-                                                         endorsement_peers=[[peer.host, peer.path_to_tls_ca_cert]
-                                                                            for peer in peers.iterator()]
-                                                         )
+        instance = super().__call__(*args, **kwargs)
+        cls._instances[cls] = instance
+        cls.interface = FabricSmartContractInterface(settings.FABRIC_USER, settings.FABRIC_ORG)
         return cls._instances[cls]
 
 
@@ -75,7 +55,8 @@ class CreateAssetView(APIView):
 
         try:
             # Assuming the function create_asset is defined somewhere accessible
-            InterfaceGenerator().interface.create_asset(code, description, int(amount))
+            interface = InterfaceGenerator().interface
+            response = async_to_sync(interface.create_asset)(code, description, int(amount))
             return Response(
                 {"message": "Asset created successfully"},
                 status=status.HTTP_201_CREATED
@@ -84,7 +65,7 @@ class CreateAssetView(APIView):
             # Error handling in case of failures when creating the asset
             return Response(
                 {"error": str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                status=status.HTTP_409_CONFLICT
             )
 
 
@@ -96,7 +77,6 @@ class CreateAssetWithConsumeView(APIView):
         description = data.get('description')
         amount = data.get('amount')
         assets_consumed = data.get('assets_consumed')  # This is expected to be a JSON string
-        print(data)
         # Validate the presence of all required data
         if not all([code, description, amount is not None, assets_consumed]):
             return Response(
@@ -116,26 +96,28 @@ class CreateAssetWithConsumeView(APIView):
             )
 
         try:
-            InterfaceGenerator().interface.consume_and_create(code, description, int(amount), assets_consumed)
+
+            print(str(async_to_sync(InterfaceGenerator().interface.consume_and_create)(code, description, int(amount), assets_consumed)))
             return Response(
                 {"message": "Asset created successfully"},
                 status=status.HTTP_201_CREATED
             )
         except Exception as e:
+            raise
             # Handle errors in asset consumption and creation
             return Response(
                 {"error": str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                status=status.HTTP_409_CONFLICT
             )
 
 
 class GetAllAssetsView(APIView):
     def get(self, request, *args, **kwargs):
-
         try:
-            assets_json = InterfaceGenerator().interface.get_all_assets()  # Call the function that gets all assets
+            # Llama a la función asíncrona directamente con await
+            assets_json = json.loads(async_to_sync(InterfaceGenerator().interface.get_all_assets)())
             return Response(
-                {"assets": assets_json},  # Return assets as JSON inside a JSON field
+                {"assets": assets_json},  # Devolver los activos como JSON
                 status=status.HTTP_200_OK
             )
         except Exception as e:
@@ -148,7 +130,7 @@ class GetAllAssetsView(APIView):
 class ReadAssetView(APIView):
     def get(self, request, code, *args, **kwargs):
         try:
-            asset_details = InterfaceGenerator().interface.read_asset(code)
+            asset_details = json.loads(async_to_sync(InterfaceGenerator().interface.read_asset)(code))
             if asset_details:
                 return Response(asset_details, status=status.HTTP_200_OK, content_type='application/json')
             else:
@@ -164,7 +146,6 @@ class ReadAssetView(APIView):
 class ProposeTransferView(APIView):
     def post(self, request, code, *args, **kwargs):
         # Extract 'code' and 'send_to' from the request data
-        print(request.data)
         post_code = request.data.get('code')
         send_to = request.data.get('send_to')
 
@@ -180,10 +161,9 @@ class ProposeTransferView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-
         # Call the propose_transfer function with the parameters
         try:
-            InterfaceGenerator().interface.propose_transfer(code, send_to)
+            async_to_sync(InterfaceGenerator().interface.propose_transfer)(code, send_to)
             return Response(
                 {"message": "Asset marked for transfer"},
                 status=status.HTTP_200_OK
@@ -192,7 +172,7 @@ class ProposeTransferView(APIView):
             # Generic error handling
             return Response(
                 {"error": str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                status=status.HTTP_409_CONFLICT
             )
 
 
@@ -214,7 +194,7 @@ class AcceptTransferView(APIView):
             )
         # Call the accept_transfer function with the code
         try:
-            InterfaceGenerator().interface.accept_transfer(code)
+            async_to_sync(InterfaceGenerator().interface.accept_transfer)(code)
             return Response(
                 {"message": "Asset transfer successfully"},
                 status=status.HTTP_200_OK
@@ -223,7 +203,7 @@ class AcceptTransferView(APIView):
             # Generic error handling
             return Response(
                 {"error": str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                status=status.HTTP_409_CONFLICT
             )
 
 
@@ -247,7 +227,7 @@ class ConsumeAssetView(APIView):
         try:
             # Convert amount to integer and call the consume function
             amount = int(amount)
-            result = InterfaceGenerator().interface.consume(code, amount)
+            result = async_to_sync(InterfaceGenerator().interface.consume)(code, amount)
             return Response(
                 {"message": "Asset consumed successfully"},
                 status=status.HTTP_200_OK
@@ -262,14 +242,14 @@ class ConsumeAssetView(APIView):
             # Generic error handling
             return Response(
                 {"error": str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                status=status.HTTP_409_INTERNAL_SERVER_ERROR
             )
 
 
 class FetchAssetHistoryView(APIView):
     def get(self, request, code, *args, **kwargs):
         try:
-            asset_details = InterfaceGenerator().interface.history(code)
+            asset_details = json.loads(async_to_sync(InterfaceGenerator().interface.history)(code))
             if asset_details:
                 return Response(asset_details, status=status.HTTP_200_OK, content_type='application/json')
             else:

@@ -1,47 +1,36 @@
+import asyncio
+import re
 import time
 
-from django.core.management.base import BaseCommand, CommandError
-
-from traceability_system import settings
+from django.core.management.base import BaseCommand
 from fabric.interfaces.FabricSmartContractInterface import FabricSmartContractInterface
-from fabric.models import *
+from traceability_system import settings
+
 
 class Command(BaseCommand):
     help = "Test Fabric Speed (Needed command fabric_init_example_data)"
 
     def handle(self, *args, **options):
-        peers = PeerNode.objects.all()
-        orderers = OrdererNode.objects.all()
+        ORGS = ["org1.example.com", "org2.example.com"]
+        PEERS = ['peer0.org1.example.com', 'peer0.org2.example.com']
+        self.cli = settings.FABRIC_CLIENT
 
-        if not peers.exists():
-            raise Exception("You need at least one peers for the endorsement policies")
-
-        if not orderers.exists():
-            raise Exception("You need at least two orderers for the endorsement policies")
-        orderer = orderers.first()
-        interface = FabricSmartContractInterface(binary_path=settings.BINARY_PATH,
-                                            fabric_cfg_path=settings.CONFIG_PATH,
-                                            peer_msp_id=settings.MSP_ID,
-                                            peer_msp_config_path=settings.MSP_CONFIG_PATH,
-                                            peer_tls_root_cert=settings.TLS_ROOT_CERT,
-                                            peer_address=settings.PEER_ADDRESS,
-                                            channel=settings.CHANNEL,
-                                            chaincode=settings.CHAINCODE,
-                                            orderer=[orderer.host, orderer.tls_host_override,
-                                                     orderer.path_to_tls_ca_cert],
-                                            endorsement_peers=[[peer.host, peer.path_to_tls_ca_cert]
-                                                               for peer in peers.iterator()]
-                                            )
+        print(self.user.enrollment._cert)
 
 
-        num = "01"
-
-        a = "a"+num
-        b = "b" + num
+        # loop = asyncio.get_event_loop()
+        #
+        # interface = FabricSmartContractInterface("User1", 1)
+        #
+        #
+        # num = "01"
+        #
+        # a = "a"+num
+        # b = "b" + num
         # print("Create")
         # print("-------------------------")
-        # print(interface.create_asset(a, "Test 1", 100))
-        # time.sleep(3)
+        # print(loop.run_until_complete(interface.create_asset("000", "0001", "10")))
+        # time.sleep(1)
 
 
         # print("transfer")
@@ -66,12 +55,12 @@ class Command(BaseCommand):
         # time.sleep(3)
 
 
-        print("Consume")
-        print("-------------------------")
-        print(interface.consume(b, 100))
-        time.sleep(3)
-
-
-        print("get_all")
-        print("-------------------------")
-        print(interface.get_all_assets())
+        # print("Consume")
+        # print("-------------------------")
+        # print(interface.consume(b, 100))
+        # time.sleep(3)
+        #
+        #
+        # print("get_all")
+        # print("-------------------------")
+        # print(loop.run_until_complete(interface.get_all_assets()))
