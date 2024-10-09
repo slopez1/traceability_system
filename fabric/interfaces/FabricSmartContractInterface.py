@@ -32,7 +32,7 @@ class FabricSmartContractInterface(SmartContractInterface):
         :param args: Arguments to pass to the function must be strings. An array of several parameters would be represented "['1,2', 'Other value']"
         :return: Function response string
         """
-        response = self.loop.run_until_complete(self.cli.chaincode_query)(
+        response = self.cli.chaincode_query(
             requestor=self.user,
             channel_name=self.channel,
             peers=self.PEERS,
